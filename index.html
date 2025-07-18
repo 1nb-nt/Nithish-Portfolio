@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Portfolio - Sliding UI Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #000;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    .three-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      background: #000;
+    }
+    .container {
+      max-width: 700px;
+      margin: 3rem auto 2rem auto;
+      background: rgba(20,20,30,0.92);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px 0 #000a;
+      padding: 2.5rem 2rem 2rem 2rem;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1.2s cubic-bezier(.77,0,.18,1);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(60px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .slide-in {
+      animation: slideIn 1.2s cubic-bezier(.77,0,.18,1);
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(80px) scale(0.97); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    #add-project-btn {
+      background: linear-gradient(90deg, #6d2aff 0%, #2d0036 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(80,0,120,0.12);
+      transition: background 0.2s, box-shadow 0.2s;
+      margin-bottom: 1.5rem;
+    }
+    #add-project-btn:hover {
+      background: linear-gradient(90deg, #a88cff 0%, #6d2aff 100%);
+      box-shadow: 0 4px 16px rgba(80,0,120,0.18);
+    }
+    .resume-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .resume-center h1 {
+      font-size: 2.3rem;
+      margin-bottom: 0.3rem;
+    }
+    .resume-center p, .resume-center ul {
+      align-items: center;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .resume-center a {
+      color: #ffb347;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .resume-center a:hover {
+      color: #fff176;
+    }
+    /* 8D Hovering Clamp Dimensions */
+    .clamp-8d {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      left: 50%;
+      top: 60%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 320px;
+      perspective: 1200px;
+      opacity: 0.7;
+    }
+    .clamp-8d-cube {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #a88cff 0%, #2d0036 100%);
+      border-radius: 18px 8px 18px 8px / 8px 18px 8px 18px;
+      box-shadow: 0 0 32px 8px #6d2aff55, 0 2px 8px #fff2;
+      border: 2.5px solid #fff2;
+      transition: box-shadow 0.3s;
+      will-change: transform;
+      opacity: 0.85;
+      animation: clamp8dFloat 4s infinite cubic-bezier(.77,0,.18,1);
+    }
+    @keyframes clamp8dFloat {
+      0% { filter: blur(0.5px); }
+      50% { filter: blur(2.5px); }
+      100% { filter: blur(0.5px); }
+    }
+    @media (max-width: 700px) {
+      .clamp-8d { width: 98vw; height: 180px; }
+      .container { padding: 1.2rem 0.7rem; }
+    }
+    /* Resume Section Styles */
+    .resume-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2.5rem;
+      margin-top: 2.5rem;
+    }
+    .resume-main {
+      flex: 2;
+      background: rgba(30,0,40,0.92);
+      border-radius: 1.2rem;
+      box-shadow: 0 2px 16px 0 #000a;
+      padding: 2.2rem 2rem 2rem 2rem;
+      z-index: 2;
+      min-width: 320px;
+      max-width: 480px;
+    }
+    .resume-main h2 {
+      color: #a88cff;
+      margin-top: 1.5rem;
+      margin-bottom: 0.7rem;
+      font-size: 1.3rem;
+      border-bottom: 1.5px solid #333;
+      padding-bottom: 0.2rem;
+      letter-spacing: 0.01em;
+    }
+    .resume-main ul {
+      list-style: disc inside;
+      margin: 0 0 1.2rem 0;
+      padding: 0 0 0 1.2rem;
+      text-align: left;
+    }
+    .resume-main li {
+      margin-bottom: 0.5rem;
+      color: #e0d6ff;
+      font-size: 1.04rem;
+    }
+    .resume-main p {
+      text-align: left;
+      margin-bottom: 1.1rem;
+      color: #d6c6ff;
+    }
+    .clamp-8d-side {
+      flex: 1;
+      min-width: 80px;
+      max-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      height: 100%;
+    }
+    .clamp-8d-cube.side {
+      width: 48px;
+      height: 48px;
+      margin: 1.2rem 0;
+      opacity: 0.7;
+      border-radius: 12px 6px 12px 6px / 6px 12px 6px 12px;
+      animation: clamp8dFloat 3.5s infinite cubic-bezier(.77,0,.18,1);
+    }
+    @media (max-width: 900px) {
+      .resume-section { flex-direction: column; align-items: center; gap: 0.5rem; }
+      .clamp-8d-side { flex-direction: row; min-width: 0; max-width: none; width: 100%; justify-content: center; }
+      .clamp-8d-cube.side { margin: 0 0.7rem; }
+    }
+    .cert-link, .project-card.slide-in a {
+      color: #ffb347;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .cert-link:hover, .project-card.slide-in a:hover {
+      color: #fff176;
+    }
+  </style>
+  <!-- Page-wide animated transition overlay -->
+  <div id="page-transition-overlay"></div>
+  <!-- Apple-style animated background blobs -->
+  <div class="apple-bg-blob blob1"></div>
+  <div class="apple-bg-blob blob2"></div>
+  <div class="apple-bg-blob blob3"></div>
+  <div class="apple-bg-blob blob4"></div>
+  <div class="three-bg" id="three-bg"></div>
+  <div class="clamp-8d" id="clamp8d"></div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+  <style>
+    #page-transition-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 10000;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 60% 40%, #a88cff 0%, #2d0036 60%, #000 100%);
+      opacity: 1;
+      animation: pageReveal 1.3s cubic-bezier(.77,0,.18,1) forwards;
+    }
+    @keyframes pageReveal {
+      0% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0 round 0px);
+        filter: blur(0px) brightness(1.2);
+      }
+      60% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0 round 0px);
+        filter: blur(0px) brightness(1.2);
+      }
+      100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0 round 80vw);
+        filter: blur(8px) brightness(1.1);
+      }
+    }
+  </style>
+  <script>
+    // Remove overlay after animation
+    window.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('page-transition-overlay');
+      overlay.addEventListener('animationend', () => {
+        overlay.parentNode.removeChild(overlay);
+      });
+    });
+  </script>
+  <script>
+    // 3D animated background using Three.js
+    const container = document.getElementById('three-bg');
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+    let renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setClearColor(0x000000, 1);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+    // 3D group of animated cubes (dimensions)
+    let group = new THREE.Group();
+    for (let i = 0; i < 12; i++) {
+      let geometry = new THREE.BoxGeometry(2, 2, 2);
+      let material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(`hsl(${260 + i*8}, 80%, 60%)`),
+        metalness: 0.8,
+        roughness: 0.25,
+        emissive: new THREE.Color(`hsl(${260 + i*8}, 60%, 20%)`)
+      });
+      let cube = new THREE.Mesh(geometry, material);
+      cube.position.set(Math.sin(i)*8, Math.cos(i*1.2)*8, Math.cos(i*0.7)*8);
+      group.add(cube);
+    }
+    scene.add(group);
+    // Lighting
+    let light = new THREE.PointLight(0xffffff, 1.2, 100);
+    light.position.set(0, 10, 20);
+    scene.add(light);
+    let ambient = new THREE.AmbientLight(0x8888ff, 0.5);
+    scene.add(ambient);
+    camera.position.z = 28;
+    // Animate
+    function animate() {
+      requestAnimationFrame(animate);
+      group.rotation.x += 0.003;
+      group.rotation.y += 0.004;
+      renderer.render(scene, camera);
+    }
+    animate();
+    // Responsive
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    // 8D Hovering Clamp Cubes
+    const clamp8d = document.getElementById('clamp8d');
+    const clampCubes = [];
+    for (let i = 0; i < 8; i++) {
+      const cube = document.createElement('div');
+      cube.className = 'clamp-8d-cube';
+      clamp8d.appendChild(cube);
+      clampCubes.push(cube);
+    }
+    function animateClamp8d() {
+      const t = Date.now() / 900;
+      clampCubes.forEach((cube, i) => {
+        // 8D-like parametric movement
+        const angle = t * 0.5 + i * (Math.PI / 4);
+        const r = 110 + 40 * Math.sin(t/2 + i);
+        const x = Math.cos(angle) * r;
+        const y = Math.sin(angle) * r * Math.cos(t/3 + i);
+        const z = Math.sin(angle*1.5) * 60;
+        cube.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, ${z}px) rotateY(${angle*40}deg) rotateX(${angle*30}deg)`;
+        cube.style.background = `linear-gradient(135deg, hsl(${260+i*12},80%,60%) 0%, #2d0036 100%)`;
+        cube.style.boxShadow = `0 0 32px 8px hsl(${260+i*12},80%,60%,0.35), 0 2px 8px #fff2`;
+      });
+      requestAnimationFrame(animateClamp8d);
+    }
+    animateClamp8d();
+    // Add 8D cubes to both sides
+    function createClamp8dSide(id, offset) {
+      const side = document.getElementById(id);
+      for (let i = 0; i < 4; i++) {
+        const cube = document.createElement('div');
+        cube.className = 'clamp-8d-cube side';
+        side.appendChild(cube);
+      }
+      function animateSideCubes() {
+        const t = Date.now() / 900 + offset;
+        Array.from(side.children).forEach((cube, i) => {
+          const angle = t * 0.7 + i * (Math.PI / 2);
+          const y = Math.sin(angle) * 60;
+          const z = Math.cos(angle) * 40;
+          cube.style.transform = `translateY(${y}px) translateZ(${z}px) rotateY(${angle*30}deg) rotateX(${angle*20}deg)`;
+          cube.style.background = `linear-gradient(135deg, hsl(${260+i*18+offset*10},80%,60%) 0%, #2d0036 100%)`;
+          cube.style.boxShadow = `0 0 24px 6px hsl(${260+i*18+offset*10},80%,60%,0.25), 0 2px 8px #fff2`;
+        });
+        requestAnimationFrame(animateSideCubes);
+      }
+      animateSideCubes();
+    }
+    createClamp8dSide('clamp8d-left', 0);
+    createClamp8dSide('clamp8d-right', 4);
+  </script>
+  <!-- Portfolio Resume Section -->
+  <div class="container slide-in resume-center">
+    <h1>Nithish Balaji S</h1>
+    <p style="margin-bottom:0.5rem;">
+      <strong>Email:</strong> <a href="mailto:nitishbalaji1@gmail.com" style="color:#a88cff;">nitishbalaji1@gmail.com</a><br>
+      <strong>Phone:</strong> <a href="tel:8925463332" style="color:#a88cff;">8925463332</a><br>
+      <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/nitish-balaji-1704a1271/" target="_blank" style="color:#a88cff;">linkedin.com/in/nitish-balaji-1704a1271</a>
+    </p>
+    <hr style="border:0;border-top:1.5px solid #333;margin:1.5rem 0;">
+    <h2>Summary</h2>
+    <p>Motivated Full Stack Developer completed graduation with a B.Tech in Information Technology, possessing robust foundation in programming languages including HTML, CSS, JavaScript, Java, and frameworks such as React and Spring Boot.</p>
+  </div>
+
+  <!-- Portfolio Projects Section (moved down) -->
+  <div class="container" style="margin-top: 2.5rem;">
+    <h1>My Portfolio Projects</h1>
+    <button id="add-project-btn">Add Project</button>
+    <div id="projects-list">
+      <div class="project-card slide-in">
+        <h3>Pricing Landing Page</h3>
+        <p>Semantic structure with obvious sections and unordered lists for pricing features and custom toggle switch using checkbox hack, buttons for call-to-action. To visualize hierarchy through card shadows, active state highlighting, bottom borders on list items and custom toggle switch styling. By implying JavaScript the page will handle the price toggle functionality, switches prices between annual rates and add interactive elements to buttons. The key characteristic is the clean design and card-based layout for easy comparison.</p>
+      </div>
+      <div class="project-card slide-in">
+        <h3>Banking Application</h3>
+        <p>This is a secure, scalable, and RESTful banking application developed using Spring Framework that can support banking activities like account management, fund transfer, transaction history, and user authentication. The system has a microservices architecture and connects to a relational database (MySQL). It follows industry-standard security practices to maintain data integrity and protect against unauthorized access.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portfolio Certifications Section -->
+  <div class="container" style="margin-top: 2.5rem;">
+    <h1>Certifications</h1>
+    <div id="certifications-list">
+      <div class="project-card slide-in">
+        <h3>
+          <a href="https://drive.google.com/file/d/1o5zM9b2cjbatye5BX_wmuR9ngJVqwJLc/view?usp=sharing" target="_blank" class="cert-link">
+            Java Full-Stack with JavaScript and React - FITA Academy (View Certificate)
+          </a>
+        </h3>
+      </div>
+      <div class="project-card slide-in">
+        <h3>
+          <a href="https://drive.google.com/file/d/1JMYsXdjETHYOESAWxOzWyBSGkL-igNSS/view?usp=sharing" target="_blank" class="cert-link">
+            Intro to ML DL AND Computer Vision - IIT Madras (View Certificate)
+          </a>
+        </h3>
+      </div>
+      <div class="project-card slide-in">
+        <h3>Fundamentals of Digital Marketing - Google</h3>
+      </div>
+      <div class="project-card slide-in">
+        <h3>
+          <a href="https://drive.google.com/file/d/14n0G_m1-c9Jpbrzjz-8X7g1CQBDJ-A6x/view?usp=sharing" target="_blank" class="cert-link">
+            Intro to Cybersecurity - Infosys Springboard (View Certificate)
+          </a>
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
